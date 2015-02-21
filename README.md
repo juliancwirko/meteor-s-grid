@@ -20,6 +20,8 @@ There is also standalone npm package: [https://www.npmjs.com/package/s-grid](htt
 
 ## Usage
 
+You don't need to install Meteor Stylus package it is absorbed by s-grid. If you have it installed just uninstall it and install only s-grid package.
+
 ### You can use it like a block grid. For example:
 
 ```
