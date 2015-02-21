@@ -2,7 +2,7 @@ Package.describe({
     summary: 'Stylus Flexbox grid system for Meteor',
     version: "0.0.1",
     name: 'juliancwirko:s-grid',
-    git: ''
+    git: 'https://github.com/juliancwirko/meteor-s-grid.git'
 });
 
 Package._transitional_registerBuildPlugin({
