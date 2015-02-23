@@ -1,6 +1,6 @@
 ## Stylus Flexbox grid system for Meteor
 
-[http://s-grid.meteor.com/](http://s-grid.meteor.com/)
+[Docs and grid examples: s-grid.meteor.com](http://s-grid.meteor.com/)
 
 ## Instalation
 
@@ -197,6 +197,28 @@ section
 ```
 
 You will have clean aside (4cols) and main (8cols) in 12 (default) columns grid;
+
+### Sortable (drag and drop) js plugins integration
+
+There is a default test config with jQuery UI Sortable and RubaXa Sortable here:
+
+[http://sortable-test.s-grid.meteor.com/](http://sortable-test.s-grid.meteor.com/)
+
+It definately needs more tests. I want to play with masonry layouts too. Based on Flexbox and also in cooperation with other masonry like js plugins.
+
+```javascript
+Template.test1.rendered = function () {
+    this.$(".grid").sortable({
+        items: "> .item",
+        cursor: "move"
+    });
+};
+
+Template.test2.rendered = function () {
+    var el = this.find('#rubaxaSortable');
+    var sortable = Sortable.create(el);
+};
+```
 
 ### Inspired by:
 
