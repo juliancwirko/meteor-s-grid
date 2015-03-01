@@ -94,6 +94,83 @@ You don't need to install Meteor Stylus package it is absorbed by s-grid. If you
 * ````s-grid-cell-offset-xxlg-6````
 * ..etc
 
+### Grid direction:
+
+#### You can change direction of the grid cells. To do so, just add one more class:
+
+* ````s-grid-column```` (from top to bottom)
+* ````s-grid-column-reverse```` (from bottom to top)
+* ````s-grid-row```` (from left to right - default)
+* ````s-grid-row-reverse```` (from right to left)
+
+**If you use column direction (top to bottom or bottom to top) you can control your main s-grid container height. Width of the container should be dynamic or you can set overflow-x: auto on it.**
+
+&nbsp;
+
+#### Grid direction example 1:
+&nbsp;
+```
+<div style="max-height: 400px; overflow-x: auto;" class="s-grid-top s-grid-column s-grid-sm-12 s-grid-md-6 s-grid-lg-4 s-grid-xlg-3 s-grid-xxlg-2">
+    <div class="s-grid-cell">
+        1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, doloribus!
+    </div>
+    <div class="s-grid-cell">
+        2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid quae sint sapiente distinctio error molestias officiis tenetur porro perferendis doloribus!
+    </div>
+    <div class="s-grid-cell">
+        3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis, perspiciatis!
+    </div>
+    <div class="s-grid-cell">
+        4 Lorem ipsum dolor sit.
+    </div>
+    <div class="s-grid-cell">
+        5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione, architecto.
+    </div>
+    <div class="s-grid-cell">
+        6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci minus laboriosam nisi vero, est dignissimos.
+    </div>
+    <div class="s-grid-cell">
+        7 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque, repellendus!
+    </div>
+    <div class="s-grid-cell">
+        8 Lorem ipsum dolor sit amet.
+    </div>
+</div>
+```
+
+&nbsp;
+
+#### Grid direction example 2:
+&nbsp;
+```
+<div class="s-grid-top s-grid-row-reverse s-grid-sm-12 s-grid-md-6 s-grid-lg-4 s-grid-xlg-3 s-grid-xxlg-2">
+    <div class="s-grid-cell">
+        1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, doloribus!
+    </div>
+    <div class="s-grid-cell">
+        2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid quae sint sapiente distinctio error molestias officiis tenetur porro perferendis doloribus!
+    </div>
+    <div class="s-grid-cell">
+        3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis, perspiciatis!
+    </div>
+    <div class="s-grid-cell">
+        4 Lorem ipsum dolor sit.
+    </div>
+    <div class="s-grid-cell">
+        5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione, architecto.
+    </div>
+    <div class="s-grid-cell">
+        6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci minus laboriosam nisi vero, est dignissimos.
+    </div>
+    <div class="s-grid-cell">
+        7 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque, repellendus!
+    </div>
+    <div class="s-grid-cell">
+        8 Lorem ipsum dolor sit amet.
+    </div>
+</div>
+```
+
 ### Nested grids
 
 You should be able to use nested grids. Example:
@@ -181,19 +258,19 @@ So ````my-special-item```` element should be first now.
 ### So many ugly classes..
 
 You can change the names of main classes. (read above).
-But you can also extend custom classes and use ````cols()```` function to create your custom styles.
+But you can also extend custom classes and use ````grid()````, ````grid-cell()````, ````cols()```` functions to create your custom styles.
 
 ```
 section
-    @extend .{gridClassName}
+    grid()
     aside, main
-        @extend .{cellClassName}
+        grid-cell()
         cols(columns, columns, gutter)
     @media screen and (min-width: rem-calc(breakpoints[md]))
         aside
-            cols(4, columns, gutter)
+            cols(columns / 3, columns, gutter)
         main
-            cols(8, columns, gutter)
+            cols((columns / 3) * 2, columns, gutter)
 ```
 
 You will have clean aside (4cols) and main (8cols) in 12 (default) columns grid;
