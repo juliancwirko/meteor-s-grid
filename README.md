@@ -18,7 +18,7 @@ Then in your main *.styl file import:
 @import 's-grid'
 ```
 
-There is also standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
+There is also standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid) and GruntJS project scaffold with s-grid and many useful tasks like wiredep, usemin and livereload: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
 
 ## Usage
 
