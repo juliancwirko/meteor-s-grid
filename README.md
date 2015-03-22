@@ -258,13 +258,12 @@ So ````my-special-item```` element should be first now.
 ### So many ugly classes..
 
 You can change the names of main classes. (read above).
-But you can also extend custom classes and use ````grid()````, ````grid-cell()````, ````cols()```` functions to create your custom styles.
+But you can also extend custom classes and use ````grid()````, ````cols()```` functions to create your custom styles.
 
 ```
 section
     grid()
     aside, main
-        grid-cell()
         cols(columns, columns, gutter)
     @media screen and (min-width: rem-calc(breakpoints[md]))
         aside
