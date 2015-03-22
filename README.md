@@ -18,11 +18,13 @@ Then in your main *.styl file import:
 @import 's-grid'
 ```
 
-There is also standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid) and GruntJS project scaffold with s-grid and many useful tasks like wiredep, usemin and livereload: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
+You will find grid files in the standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
+
+You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
 
 ## Usage
 
-You don't need to install Meteor Stylus package it is absorbed by s-grid. If you have it installed just uninstall it and install only s-grid package.
+You don't need to install the Meteor Stylus package because it is absorbed by s-grid. If you have it installed just uninstall it and install only the s-grid package.
 
 ### You can use it like a block grid. For example:
 
@@ -195,7 +197,7 @@ You should be able to use nested grids. Example:
 
 ### Overwrite settings
 
-You can overwrite settings, just place your settings after ````s-grid-settings```` import. Do something like this:
+You can overwrite the settings, just place your settings after ````s-grid-settings```` import. Do something like this:
 
 ```
 @import 's-grid-settings'
@@ -257,8 +259,9 @@ So ````my-special-item```` element should be first now.
 
 ### So many ugly classes..
 
-You can change the names of main classes. (read above).
-But you can also extend custom classes and use ````grid()````, ````cols()```` functions to create your custom styles.
+Yes I know :) It could be simpler, but sometimes it is good to have namespace.
+You can change the names of the main classes. (read above).
+You can also extend custom classes and use the ````grid()````, ````cols()```` functions to create your custom styles. (Semantic approach)
 
 ```
 section
@@ -280,7 +283,7 @@ There is a default test config with jQuery UI Sortable and RubaXa Sortable here:
 
 [http://sortable-test.s-grid.meteor.com/](http://sortable-test.s-grid.meteor.com/)
 
-It definately needs more tests. I want to play with masonry layouts too. Based on Flexbox and also in cooperation with other masonry like js plugins.
+It definitely needs more tests. I want to play with masonry layouts too. Based on Flexbox and also in cooperation with other masonry like js plugins.
 
 ```javascript
 Template.test1.rendered = function () {
