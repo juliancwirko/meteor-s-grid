@@ -1,6 +1,7 @@
 ## Stylus Flexbox grid system for Meteor
 
-[Docs and grid examples: s-grid.meteor.com](http://s-grid.meteor.com/)
+- [Docs and grid examples: s-grid.meteor.com](http://s-grid.meteor.com/)
+- [Blog post about it](http://julian.io/s-grid-working-with-flexible-box-layouts/)
 
 ## Instalation
 
