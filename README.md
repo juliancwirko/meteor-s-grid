@@ -19,13 +19,13 @@ Then in your main *.styl file import:
 @import 's-grid-classes' // optional - only if you want to use helper classes
 ```
 
-You will find grid files in the standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
-
-You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
-
 ## Usage
 
 You don't need to install the Meteor Stylus package because it is absorbed by s-grid. If you have it installed just uninstall it and install only the s-grid package.
+
+If you want to preview s-grid code You will find the grid files in the standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
+
+You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
 
 ### Version 1.0.0 breaking changes
 
