@@ -333,6 +333,10 @@ MIT
 
 ### Changelog
 
+#### v1.1.0
+- fix related with wrong paths for additional plugins
+- autoprefixer update
+
 #### v1.0.1_2
 - some updates
 - stylus config file
