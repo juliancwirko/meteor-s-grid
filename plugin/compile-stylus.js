@@ -1,3 +1,6 @@
+
+var appModulePath = Npm.require('app-module-path');
+appModulePath.addPath(process.cwd() + '/packages');
 var fs = Npm.require('fs');
 var stylus = Npm.require('stylus');
 var autoprefixer = Npm.require('autoprefixer-stylus');
@@ -38,9 +41,9 @@ var stylusStep = function (compileStep) {
 // default and needed modules
 var sGridPlugins = [autoprefixer, rupture, sGrid];
 
-if (sGridOptions.includePlugins) {
+if (sGridOptions.includePlugins && sGridOptions.pluginsDirName) {
     sGridOptions.includePlugins.forEach(function (p) {
-        sGridPlugins.push(Npm.require(p));
+        sGridPlugins.push(Npm.require(sGridOptions.pluginsDirName + '/.npm/package/node_modules/' + p));
     });
 }
 

@@ -27,6 +27,10 @@ If you want to preview s-grid code You will find the grid files in the standalon
 
 You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
 
+### Version 1.1.0 changes
+
+If you are using `sgrid.json` config file, there are some changes. See description below.
+
 ### Version 1.0.0 breaking changes
 
 - cols() is now cell()
@@ -241,32 +245,37 @@ sGrid uses 3 default plugins (npm modules): `autoprefixer-stylus`, `rupture` and
 
 If you want to add some more stylus plugins like for example `nib` (or your custom ones) you should prepare two things:
 
-- **Your local Meteor package with 'nib' npm dependency. You will need only `package.json` file with content like:**
+- **Your local Meteor package with npm dependencies. You will need only `package.json` file with content like:**
 
 ```
 Package.describe({
     summary: 'Your package description here',
-    version: "0.1.0",
-    name: 'myname:nib',
+    version: "1.0.0",
+    name: 'myname:some-other-packages',
     git: ''
 });
 
 Npm.depends({
-    'nib': '1.1.0'
+    'nib': '1.1.0',
+    'typographic': '2.9.3'
 });
 ```
-Of course you need to add the package: `meteor add myname:nib`
+Of course you need to add the package: `meteor add myname:some-other-packages`
 
-- **Next is sGrid config file in your app root directory. This file is `sgrid.json` and its content will be like:**
+- **Next you should prepare sGrid config file in your app root directory. This file name is `sgrid.json` and its content will be like:**
 
 ```
 {
+    "pluginsDirName": "some-other-packages-directory-name",
     "includePlugins": [
-        "nib"
+        "nib", "typographic"
     ]
 }
 ```
-Remember that plugin name must be the same as npm module name.
+
+Remember that plugin name must be the same as npm module name also you need to provide the name of root directory of your `myname:some-other-packages` the one located in the `/packages` directory. It could have different name than your package name, but you should provide it in your `sgrid.json` file.
+
+**After all restart your meteor app**
 
 ##Additional include paths
 
@@ -297,8 +306,9 @@ To do this you need to add another information in `sgrid.json` file.
     "includePaths": [
         ".meteor/local/build/programs/server/assets/packages/scotty_theme"
     ],
+    "pluginsDirName": "some-other-packages-directory-name",
     "includePlugins": [
-        "nib"
+        "nib", "typographic"
     ]
 }
 ```
