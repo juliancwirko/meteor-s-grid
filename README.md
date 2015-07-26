@@ -333,6 +333,9 @@ MIT
 
 ### Changelog
 
+#### v1.1.1
+- Stylus and Autoprefixer updates
+
 #### v1.1.0
 - fix related with wrong paths for additional plugins
 - autoprefixer update
