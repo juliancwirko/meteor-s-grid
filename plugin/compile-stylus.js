@@ -1,90 +1,183 @@
+const stylus = Npm.require('stylus');
+const autoprefixer = Npm.require('autoprefixer-stylus');
+const sGrid = Npm.require('s-grid');
+const rupture = Npm.require('rupture');
+const Future = Npm.require('fibers/future');
+const fs = Plugin.fs;
+const path = Plugin.path;
 
-var appModulePath = Npm.require('app-module-path');
-appModulePath.addPath(process.cwd() + '/packages');
-var fs = Npm.require('fs');
-var stylus = Npm.require('stylus');
-var autoprefixer = Npm.require('autoprefixer-stylus');
-var sGrid = Npm.require('s-grid');
-var rupture = Npm.require('rupture');
-var path = Npm.require('path');
-var Future = Npm.require('fibers/future');
-var _ = Npm.require('underscore');
+Plugin.registerCompiler({
+  extensions: ['styl'],
+  archMatching: 'web'
+}, () => new StylusCompiler());
 
-var CONFIG_FILE_NAME = 'sgrid.json';
-
-var projectOptionsFile = path.resolve(process.cwd(), CONFIG_FILE_NAME);
-
-var loadJSONFile = function (filePath) {
-    var content = fs.readFileSync(filePath);
-    try {
-        return JSON.parse(content);
-    } catch (e) {
-        console.log('Error: failed to parse ', filePath, ' as JSON');
-        return {};
-    }
-};
-
-var sGridOptions = {};
-
-if (fs.existsSync(projectOptionsFile)) {
-    sGridOptions = loadJSONFile(projectOptionsFile);
-}
-
-var stylusStep = function (compileStep) {
-    if (sGridOptions.includePaths) {
-        return stylus(compileStep.read().toString('utf8'))
-            .set('paths', sGridOptions.includePaths);
-    }
-    return stylus(compileStep.read().toString('utf8'));
-};
-
-// default and needed modules
-var sGridPlugins = [autoprefixer, rupture, sGrid];
-
-if (sGridOptions.includePlugins && sGridOptions.pluginsDirName) {
-    sGridOptions.includePlugins.forEach(function (p) {
-        sGridPlugins.push(Npm.require(sGridOptions.pluginsDirName + '/.npm/package/node_modules/' + p));
+// CompileResult is {css, sourceMap}.
+class StylusCompiler extends MultiFileCachingCompiler {
+  constructor() {
+    super({
+      compilerName: 'stylus',
+      defaultCacheSize: 1024*1024*10,
     });
-}
+  }
 
-var sPlugins = function () {
-    var self = this;
-    if (_.isArray(sGridPlugins)) {
-        sGridPlugins.forEach(function (f) {
-            if (_.isFunction(f)) {
-                self.use(f());
-            }
-        });
+  getCacheKey(inputFile) {
+    return inputFile.getSourceHash();
+  }
+
+  compileResultSize(compileResult) {
+    return compileResult.css.length +
+      this.sourceMapSize(compileResult.sourceMap);
+  }
+
+  // The heuristic is that a file is an import (ie, is not itself processed as a
+  // root) if it is in a subdirectory named 'imports' or if it matches
+  // *.import.styl. This can be overridden in either direction via an explicit
+  // `isImport` file option in api.addFiles.
+  isRoot(inputFile) {
+    const fileOptions = inputFile.getFileOptions();
+    if (fileOptions.hasOwnProperty('isImport')) {
+      return !fileOptions.isImport;
     }
-    return self;
-};
 
-Plugin.registerSourceHandler('styl', {
-    archMatching: 'web'
-}, function (compileStep) {
-    var f = new Future();
-    var css;
+    const pathInPackage = inputFile.getPathInPackage();
+    return !(/\.import\.styl$/.test(pathInPackage) ||
+             /(?:^|\/)imports\//.test(pathInPackage));
+  }
 
-    stylusStep(compileStep)
-        .use(sPlugins)
-        .set('filename', compileStep.inputPath)
-        .include(path.dirname(compileStep._fullInputPath))
-        .render(f.resolver());
+  compileOneFile(inputFile, allFiles) {
+    const referencedImportPaths = [];
 
+    function parseImportPath(filePath, importerDir) {
+      if (! filePath) {
+        throw new Error('filePath is undefined');
+      }
+      if (filePath === inputFile.getPathInPackage()) {
+        return {
+          packageName: inputFile.getPackageName() || '',
+          pathInPackage: inputFile.getPathInPackage()
+        };
+      }
+      if (! filePath.match(/^\{.*\}\//)) {
+        if (! importerDir) {
+          return { packageName: inputFile.getPackageName() || '',
+                   pathInPackage: filePath };
+        }
+
+        // relative path in the same package
+        const parsedImporter = parseImportPath(importerDir, null);
+
+        // resolve path if it is absolute or relative
+        const importPath =
+          (filePath[0] === '/') ? filePath :
+            path.join(parsedImporter.pathInPackage, filePath);
+
+        return {
+          packageName: parsedImporter.packageName,
+          pathInPackage: importPath
+        };
+      }
+
+      const match = /^\{(.*)\}\/(.*)$/.exec(filePath);
+      if (! match) { return null; }
+
+      const [ignored, packageName, pathInPackage] = match;
+      return {packageName, pathInPackage};
+    }
+    function absoluteImportPath(parsed) {
+      return '{' + parsed.packageName + '}/' + parsed.pathInPackage;
+    }
+
+    const importer = {
+      find(importPath, paths) {
+        const parsed = parseImportPath(importPath, paths[paths.length - 1]);
+        if (! parsed) { return null; }
+
+        if (importPath[0] !== '{') {
+          // if it is not a custom syntax path, it could be a lookup in a folder
+          for (let i = paths.length - 1; i >= 0; i--) {
+            const joined = path.join(paths[i], importPath);
+            if (fs.exists(joined))
+              return [joined];
+          }
+        }
+
+        const absolutePath = absoluteImportPath(parsed);
+
+        if (! allFiles.has(absolutePath)) {
+          return null;
+        }
+
+        return [absolutePath];
+      },
+      readFile(filePath) {
+        const isAbsolute = filePath[0] === '/';
+        const isSGrid = filePath.indexOf('/node_modules/s-grid/') !== -1;
+        const isRupture = filePath.indexOf('/node_modules/rupture/rupture/') !== -1;
+        const isStylusBuiltIn = filePath.indexOf('/node_modules/stylus/lib/') !== -1;
+
+        if (isAbsolute || isSGrid || isRupture || isStylusBuiltIn) {
+          // absolute path? let the default implementation handle this
+          return fs.readFileSync(filePath, 'utf8');
+        }
+
+        const parsed = parseImportPath(filePath);
+        const absolutePath = absoluteImportPath(parsed);
+
+        referencedImportPaths.push(absolutePath);
+
+        if (! allFiles.has(absolutePath)) {
+          throw new Error(
+            `Cannot read file ${absolutePath} for ${inputFile.getDisplayPath()}`
+          );
+        }
+
+        return allFiles.get(absolutePath).getContentsAsString();
+      }
+    };
+
+    function processSourcemap(sourcemap) {
+      delete sourcemap.file;
+      sourcemap.sourcesContent = sourcemap.sources.map(importer.readFile);
+      sourcemap.sources = sourcemap.sources.map((filePath) => {
+        const parsed = parseImportPath(filePath);
+        if (!parsed.packageName)
+          return parsed.pathInPackage;
+        return 'packages/' + parsed.packageName + '/' + parsed.pathInPackage;
+      });
+
+      return sourcemap;
+    }
+
+    const f = new Future;
+
+    const style = stylus(inputFile.getContentsAsString())
+            .use(autoprefixer())
+            .use(sGrid())
+            .use(rupture())
+            .set('filename', inputFile.getPathInPackage())
+            .set('sourcemap', { inline: false, comment: false })
+            .set('cache', false)
+            .set('importer', importer);
+
+    style.render(f.resolver());
+    let css;
     try {
-        css = f.wait();
+      css = f.wait();
     } catch (e) {
-        compileStep.error({
-            message: 'Stylus compiler error: ' + e.message
-        });
-        return;
+      inputFile.error({
+        message: 'Stylus compiler error: ' + e.message
+      });
+      return null;
     }
-    compileStep.addStylesheet({
-        path: compileStep.inputPath + '.css',
-        data: css
-    });
-});
+    const sourceMap = processSourcemap(style.sourcemap);
+    return {referencedImportPaths, compileResult: {css, sourceMap}};
+  }
 
-Plugin.registerSourceHandler('import.styl', function () {
-    // Do nothing
-});
+  addCompileResult(inputFile, {css, sourceMap}) {
+    inputFile.addStylesheet({
+      path: inputFile.getPathInPackage() + '.css',
+      data: css,
+      sourceMap: sourceMap
+    });
+  }
+}

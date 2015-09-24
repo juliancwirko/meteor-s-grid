@@ -3,6 +3,11 @@
 - [More complex docs and grid examples: s-grid.meteor.com](http://s-grid.meteor.com/)
 - [Blog post about it](http://julian.io/s-grid-working-with-flexible-box-layouts/)
 
+**It is now ready for Meteor 1.2** (use version 1.1.1 for older Meteor projects)
+
+**Important note:**
+From version 2.0.0 problematic sgrid.json config file is removed. New Meteor build plugin is better.
+
 ## Instalation
 
 Install it:
@@ -26,16 +31,6 @@ You don't need to install the Meteor Stylus package because it is absorbed by s-
 If you want to preview s-grid code You will find the grid files in the standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
 
 You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
-
-### Version 1.1.0 changes
-
-If you are using `sgrid.json` config file, there are some changes. See description below.
-
-### Version 1.0.0 breaking changes
-
-- cols() is now cell()
-- Grid helper classes is optional. You can import s-grid-classes.styl file if you need it.
-- Functions parameters order is changed. See below.. you can use named parameters too.
 
 ### Simple examples
 (More complex documentation: [http://s-grid.meteor.com](http://s-grid.meteor.com))
@@ -235,89 +230,6 @@ Template.test2.rendered = function () {
 };
 ```
 
-# Stylus compile plugin configuration
-
-Even if you don't want to use sGrid with this package you have possibility to use Stylus compile plugin with config file. For now you can add aditional stylus plugins (npm modules) and add more custom file paths for compiler.
-
-## Additional plugins
-
-sGrid uses 3 default plugins (npm modules): `autoprefixer-stylus`, `rupture` and `s-grid` itself. Sometimes you want to use your core stylus compile plugin (here we have compile plugin in sGrid package) and add some more stylus plugins. This is quite hard with Meteor.
-
-If you want to add some more stylus plugins like for example `nib` (or your custom ones) you should prepare two things:
-
-- **Your local Meteor package with npm dependencies. You will need only `package.json` file with content like:**
-
-```
-Package.describe({
-    summary: 'Your package description here',
-    version: "1.0.0",
-    name: 'myname:some-other-packages',
-    git: ''
-});
-
-Npm.depends({
-    'nib': '1.1.0',
-    'typographic': '2.9.3'
-});
-```
-Of course you need to add the package: `meteor add myname:some-other-packages`
-
-- **Next you should prepare sGrid config file in your app root directory. This file name is `sgrid.json` and its content will be like:**
-
-```
-{
-    "pluginsDirName": "some-other-packages-directory-name",
-    "includePlugins": [
-        "nib", "typographic"
-    ]
-}
-```
-
-Remember that plugin name must be the same as npm module name also you need to provide the name of root directory of your `myname:some-other-packages` the one located in the `/packages` directory. It could have different name than your package name, but you should provide it in your `sgrid.json` file.
-
-**After all restart your meteor app**
-
-##Additional include paths
-
-Sometimes you need to create package that will expose one or more .styl files. Then you want to include these files in your main .styl file in your app. Or maybe you want to include only couple of them. With Meteor it is quite complicated. This package tries to simplify it a little bit. Let say that you have for example theme package with one .styl file and your package.js file looks like:
-
-```
-Package.describe({
-    summary: 'Starter theme for Scotty - Meteor boilerplate',
-    version: "0.1.0",
-    name: 'scotty:theme',
-    git: 'https://github.com/juliancwirko/scotty.git'
-});
-
-Package.onUse(function (api) {
-
-    api.addFiles([
-        'scotty-theme.import.styl',
-    ], 'server', {isAsset: true});
-
-});
-```
-The .styl file is our asset and it is located on the server. Now we can provide additional path to its folder. Our stylus compile plugin will know about it and we can import the theme file in our main .styl file in the app just like the others, so: `@import 'scotty-theme.import'`
-
-To do this you need to add another information in `sgrid.json` file.
-
-```
-{
-    "includePaths": [
-        ".meteor/local/build/programs/server/assets/packages/scotty_theme"
-    ],
-    "pluginsDirName": "some-other-packages-directory-name",
-    "includePlugins": [
-        "nib", "typographic"
-    ]
-}
-```
-Here we have `includePaths` array. You can add more similar packages.
-
-**Important note: On an initial startup of the project there will be error related with stylus paths. Just ignore it and restart Meteor. This is because the `.meteor/local/` directory doesn't exist yet. Unfortunately there isn't any other good solution for this with Meteor. But dont worry, this will occure only when you start it for the first time**
-
-This workflow with stylus config file is inspired by excelent Scss package: [fourseven:scss](https://atmospherejs.com/fourseven/scss)
-
 - - -
 
 ### Grid Inspired by:
@@ -332,6 +244,9 @@ This workflow with stylus config file is inspired by excelent Scss package: [fou
 MIT
 
 ### Changelog
+
+#### v2.0.0
+- Stylus compiler update - package is ready for Meteor 1.2
 
 #### v1.1.1
 - Stylus and Autoprefixer updates
