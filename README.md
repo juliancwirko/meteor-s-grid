@@ -128,6 +128,14 @@ section
         - `+above(rem-calc(breakpoints[lg]))`
         - `+below(rem-calc(768px))`
         - `+below(768px)`
+- **center(value)** - centers main container with specified width value
+    - Usage examples:
+        - `center(1000px)`
+        - `center(breakpoints[md])`
+        - `center(12.5rem)`
+- **stack()** - shortcut for cell(1, 1) - makes full width columns
+    - Usage examples:
+        - `stack()`
 
 #### Helper classes
 
@@ -244,6 +252,10 @@ Template.test2.rendered = function () {
 MIT
 
 ### Changelog
+
+#### v2.0.1
+- sGrid update
+- autoprefixer update
 
 #### v2.0.0
 - Stylus compiler update - package is ready for Meteor 1.2
