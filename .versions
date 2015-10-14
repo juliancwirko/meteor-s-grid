@@ -1,0 +1,13 @@
+babel-compiler@5.8.24_1
+babel-runtime@0.1.4
+base64@1.0.4
+caching-compiler@1.0.0
+check@1.0.6
+ecmascript@0.1.5
+ecmascript-collections@0.1.6
+ejson@1.0.7
+juliancwirko:s-grid@2.0.1
+meteor@1.1.9
+promise@0.5.0
+random@1.0.4
+underscore@1.0.4
