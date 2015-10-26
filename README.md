@@ -151,6 +151,9 @@ MIT
 
 ### Changelog
 
+#### v2.0.2
+- sGrid update
+
 #### v2.0.1
 - sGrid update
 - autoprefixer update
