@@ -5,9 +5,6 @@
 
 **It is now ready for Meteor 1.2** (use version 1.1.1 for older Meteor projects)
 
-**Important note:**
-From version 2.0.0 problematic sgrid.json config file is removed. New Meteor build plugin is better.
-
 ## Instalation
 
 Install it:
@@ -30,7 +27,7 @@ You don't need to install the Meteor Stylus package because it is absorbed by s-
 
 If you want to preview s-grid code You will find the grid files in the standalone npm package: [https://www.npmjs.com/package/s-grid](https://www.npmjs.com/package/s-grid)
 
-You may also want to use the GruntJS based project scaffold with S-Grid and some useful Grunt tasks like usemin, wiredep, livereload etc: [https://www.npmjs.com/package/s-grid-grunt](https://www.npmjs.com/package/s-grid-grunt)
+Also check out [http://stylusgrid.com/](stylusgrid.com)
 
 ### Simple examples
 
@@ -109,47 +106,92 @@ breakpoints = {                // media queries breakpoints
 // ...
 ```
 
+### Use PostCSS plugins with Stylus
+
+From version 2.1.0 you can use PostCSS and PostCSS plugins with this package. It is possible because of Stylus plugin which is called [poststylus](https://github.com/seaneking/poststylus).
+
+(You don't have to add `autoprefixer`. It is added by default because s-grid needs it.)
+
+**To use PostCSS plugins all you need to do is:**
+
+#### 1. Prepare a local Meteor package in `/packages` folder. You can call it as you want. For example let's call it `postcss:plugins` and let's place it in the `postcss-plugins` folder. In `/packages/postcss-plugins` create `package.js` file. Example:
+
+```javascript
+Package.describe({
+    summary: 'PostCSS default plugins set',
+    version: '1.0.0',
+    name: 'postcss:plugins',
+    git: ''
+});
+
+// your PostCSS plugins here:
+Npm.depends({
+    'rucksack-css': '0.8.5'
+});
+```
+
+Next add the package by `meteor add postcss:plugins`.
+
+#### 2. You need a config file which is called `sgrid.json`. Place it in the root folder of your app. Below is an example file which will add [rucksack-css](https://github.com/simplaio/rucksack) PostCSS plugin to your Stylus build stack:
+
+```javascript
+{
+    "postcss": {
+        "plugins": [
+            {
+                "name": "rucksack-css",
+                "options": {},
+                "dirName": "postcss-plugins"
+            }
+        ]
+    }
+}
+```
+
+* **name** - PostCSS plugin name needed in PostCSS plugins API inside the build plugin (this is dynamic so we need to pass it somewhere)
+* **options** - PostCSS plugins has options which you can pass. Like for example Rucksack
+Npm.require("rucksack-css")({responsiveType: false}); So here in the config options object you need to pass 'responsiveType: false'.
+* **dirName** - we need to point where are node_modules folders, we need to pass local package folder name here. (In this example it is 'postcss-plugins')
+
+Then restart your Meteor App.
+
+#### 3. Now you can use all the features which are provided by Rucksack plugin. So in your .styl file you could write something like:
+
+Stylus:
+```stylus
+@alias
+  fs font-size
+  bg background
+  c color
+
+.item
+    fs 30px
+    bg #000
+    c #fff
+```
+
+Compiled to (with Rucksack):
+```css
+.item
+    font-size 30px
+    background-color #000
+    color #fff
+```
+
+Unfortunately for now in Meteor there isn't simpler way to include custom PostCSS plugins from outside.
 
 ### Grid website and docs
 
 - [stylusgrid.com](http://stylusgrid.com)
-
-### Sortable (drag and drop) js plugins integration
-
-There is a default test config with jQuery UI Sortable and RubaXa Sortable here:
-
-[http://sortable-test.s-grid.meteor.com/](http://sortable-test.s-grid.meteor.com/)
-
-It definitely needs more tests. I want to play with masonry layouts too. Based on Flexbox and also in cooperation with other masonry like js plugins.
-
-```javascript
-Template.test1.rendered = function () {
-    this.$(".grid").sortable({
-        items: "> .item",
-        cursor: "move"
-    });
-};
-
-Template.test2.rendered = function () {
-    var el = this.find('#rubaxaSortable');
-    var sortable = Sortable.create(el);
-};
-```
-
-- - -
-
-### Grid Inspired by:
-
-* Cory Simmons: (Creator of Jeet grid system and many other grid tools) [https://github.com/corysimmons](https://github.com/corysimmons)
-* Philip Walton (Solved by Flexbox): [http://philipwalton.github.io/solved-by-flexbox/demos/grids/](http://philipwalton.github.io/solved-by-flexbox/demos/grids/)
-* CSS tricks: [http://css-tricks.com/snippets/css/a-guide-to-flexbox/](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
-* Foundation for Apps grid [http://foundation.zurb.com/apps/docs/#!/grid](http://foundation.zurb.com/apps/docs/#!/grid)
 
 ### License
 
 MIT
 
 ### Changelog
+
+#### v2.1.0
+- You can use PostCSS plugins with Stylus
 
 #### v2.0.2
 - sGrid update

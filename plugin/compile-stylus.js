@@ -1,5 +1,9 @@
+const appModulePath = Npm.require('app-module-path');
+appModulePath.addPath(process.cwd() + '/packages');
+
 const stylus = Npm.require('stylus');
-const autoprefixer = Npm.require('autoprefixer-stylus');
+const poststylus = Npm.require('poststylus');
+const autoprefixer = Npm.require('autoprefixer');
 const sGrid = Npm.require('s-grid');
 const rupture = Npm.require('rupture');
 const Future = Npm.require('fibers/future');
@@ -10,6 +14,37 @@ Plugin.registerCompiler({
   extensions: ['styl'],
   archMatching: 'web'
 }, () => new StylusCompiler());
+
+const CONFIG_FILE_NAME = 'sgrid.json';
+
+const projectOptionsFile = path.resolve(process.cwd(), CONFIG_FILE_NAME);
+
+let loadJSONFile = function (filePath) {
+  let content = fs.readFileSync(filePath);
+  try {
+      return JSON.parse(content);
+  } catch (e) {
+      console.log('Error: failed to parse ', filePath, ' as JSON');
+      return {};
+  }
+};
+
+let configOptions = {};
+
+if (fs.existsSync(projectOptionsFile)) {
+  configOptions = loadJSONFile(projectOptionsFile);
+}
+
+let getPostCSSPlugins = function () {
+  // autoprefixer in default
+  let plugins = [autoprefixer({browsers: ['last 2 versions']})];
+  if (configOptions && configOptions.postcss && configOptions.postcss.plugins) {
+    configOptions.postcss.plugins.forEach(function (pluginObj) {
+      plugins.push(Npm.require(pluginObj.dirName + '/.npm/package/node_modules/' + pluginObj.name)(pluginObj.options));
+    });
+  }
+  return plugins;
+};
 
 // CompileResult is {css, sourceMap}.
 class StylusCompiler extends MultiFileCachingCompiler {
@@ -111,11 +146,12 @@ class StylusCompiler extends MultiFileCachingCompiler {
       },
       readFile(filePath) {
         const isAbsolute = filePath[0] === '/';
+        const isPostCss = filePath.indexOf('/node_modules/poststylus/') !== -1;
         const isSGrid = filePath.indexOf('/node_modules/s-grid/') !== -1;
         const isRupture = filePath.indexOf('/node_modules/rupture/rupture/') !== -1;
         const isStylusBuiltIn = filePath.indexOf('/node_modules/stylus/lib/') !== -1;
 
-        if (isAbsolute || isSGrid || isRupture || isStylusBuiltIn) {
+        if (isAbsolute || isPostCss || isSGrid || isRupture || isStylusBuiltIn) {
           // absolute path? let the default implementation handle this
           return fs.readFileSync(filePath, 'utf8');
         }
@@ -151,9 +187,9 @@ class StylusCompiler extends MultiFileCachingCompiler {
     const f = new Future;
 
     const style = stylus(inputFile.getContentsAsString())
-            .use(autoprefixer())
             .use(sGrid())
             .use(rupture())
+            .use(poststylus(getPostCSSPlugins()))
             .set('filename', inputFile.getPathInPackage())
             .set('sourcemap', { inline: false, comment: false })
             .set('cache', false)
