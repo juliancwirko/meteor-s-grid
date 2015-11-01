@@ -114,7 +114,8 @@ From version 2.1.0 you can use PostCSS and PostCSS plugins with this package. It
 
 **To use PostCSS plugins all you need to do is:**
 
-#### 1. Prepare a local Meteor package in `/packages` folder. You can call it as you want. For example let's call it `postcss:plugins` and let's place it in the `postcss-plugins` folder. In `/packages/postcss-plugins` create `package.js` file. Example:
+##### 1. Prepare a local Meteor package in `/packages` folder.
+You can call it as you want. For example let's call it `postcss:plugins` and let's place it in the `postcss-plugins` folder. In `/packages/postcss-plugins` create `package.js` file. Example:
 
 ```javascript
 Package.describe({
@@ -132,7 +133,8 @@ Npm.depends({
 
 Next add the package by `meteor add postcss:plugins`.
 
-#### 2. You need a config file which is called `sgrid.json`. Place it in the root folder of your app. Below is an example file which will add [rucksack-css](https://github.com/simplaio/rucksack) PostCSS plugin to your Stylus build stack:
+##### 2. You need a config file which is called `sgrid.json`.
+Place it in the root folder of your app. Below is an example file which will add [rucksack-css](https://github.com/simplaio/rucksack) PostCSS plugin to your Stylus build stack:
 
 ```javascript
 {
@@ -155,7 +157,8 @@ Npm.require("rucksack-css")({responsiveType: false}); So here in the config opti
 
 Then restart your Meteor App.
 
-#### 3. Now you can use all the features which are provided by Rucksack plugin. So in your .styl file you could write something like:
+##### 3. Now you can use all the features which are provided by Rucksack plugin.
+So in your .styl file you could write something like:
 
 Stylus:
 ```stylus
