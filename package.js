@@ -1,5 +1,5 @@
 Package.describe({
-    summary: 'Stylus Flexbox grid system for Meteor',
+    summary: 'Stylus Flexbox grid system for Meteor with PostCSS',
     version: '2.2.0',
     name: 'juliancwirko:s-grid',
     git: 'https://github.com/juliancwirko/meteor-s-grid.git'
