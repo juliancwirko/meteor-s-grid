@@ -1,5 +1,5 @@
 const appModulePath = Npm.require('app-module-path');
-appModulePath.addPath(process.cwd() + '/packages');
+appModulePath.addPath(process.cwd() + '/packages/npm-container/.npm/package/node_modules/');
 
 const stylus = Npm.require('stylus');
 const poststylus = Npm.require('poststylus');
@@ -15,9 +15,12 @@ Plugin.registerCompiler({
   archMatching: 'web'
 }, () => new StylusCompiler());
 
+
+const PACKAGES_FILE = 'packages.json';
 const CONFIG_FILE_NAME = 'sgrid.json';
 
 const projectOptionsFile = path.resolve(process.cwd(), CONFIG_FILE_NAME);
+const packagesFile = path.resolve(process.cwd(), PACKAGES_FILE);
 
 let loadJSONFile = function (filePath) {
   let content = fs.readFileSync(filePath);
@@ -29,18 +32,27 @@ let loadJSONFile = function (filePath) {
   }
 };
 
+let configPackages = {};
 let configOptions = {};
 
 if (fs.existsSync(projectOptionsFile)) {
   configOptions = loadJSONFile(projectOptionsFile);
 }
+if (fs.existsSync(packagesFile)) {
+  configPackages = loadJSONFile(packagesFile);
+}
 
 let getPostCSSPlugins = function () {
   // autoprefixer in default
-  let plugins = [autoprefixer({browsers: ['last 2 versions']})];
-  if (configOptions && configOptions.postcss && configOptions.postcss.plugins) {
-    configOptions.postcss.plugins.forEach(function (pluginObj) {
-      plugins.push(Npm.require(pluginObj.dirName + '/.npm/package/node_modules/' + pluginObj.name)(pluginObj.options));
+  let pluginsOptions = configOptions.postcss && configOptions.postcss.pluginsOptions;
+  let plugins = [autoprefixer(pluginsOptions ? pluginsOptions['autoprefixer'] : {})];
+  if (configPackages) {
+    Object.keys(configPackages).forEach(function (pluginName) {
+      // we need to check if this is a postCSS plugin and not other npm package
+      let postCSSPlugin = Npm.require(pluginName);
+      if (postCSSPlugin.name === 'creator' && postCSSPlugin().postcssPlugin) {
+        plugins.push(postCSSPlugin(pluginsOptions ? pluginsOptions[pluginName] : {}));
+      }
     });
   }
   return plugins;

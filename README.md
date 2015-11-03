@@ -111,55 +111,49 @@ breakpoints = {                // media queries breakpoints
 
 From version 2.1.0 you can use PostCSS and PostCSS plugins with this package. It is possible because of Stylus plugin which is called [poststylus](https://github.com/seaneking/poststylus).
 
-(You don't have to add `autoprefixer`. It is added by default because s-grid needs it.)
+From version 2.2.0 to use PostCSS with this package you will need to install [meteorhacks:npm](https://github.com/meteorhacks/npm) package and you should do it by hand because not all users want to use PostCSS so it will not be added automatically. Read more below.
+
+(You don't have to add `autoprefixer`. It is added by default because s-grid needs it. You can configure it. Read more about it below.)
 
 **To use PostCSS plugins all you need to do is:**
 
-##### 1. Prepare a local Meteor package in `/packages` folder.
-You can call it as you want. For example let's call it `postcss:plugins` and let's place it in the `postcss-plugins` folder. In `/packages/postcss-plugins` create `package.js` file. Example:
+#### 1. Add `meteorhacks:npm` package
 
-```javascript
-Package.describe({
-    summary: 'PostCSS default plugins set',
-    version: '1.0.0',
-    name: 'postcss:plugins',
-    git: ''
-});
-
-// your PostCSS plugins here:
-Npm.depends({
-    'rucksack-css': '0.8.5'
-});
+```
+$ meteor add meteorhacks:npm
 ```
 
-Next add the package by `meteor add postcss:plugins`.
+When you run your Meteor app there will be `packages.json` file created in the root of your app. You can specify PostCSS plugins there (standard npm packages). Example:
 
-##### 2. You need a config file which is called `sgrid.json`.
-Place it in the root folder of your app. Below is an example file which will add [rucksack-css](https://github.com/simplaio/rucksack) PostCSS plugin to your Stylus build stack:
+**packages.json (npm packages):**
+```
+{
+    "rucksack-css": "0.8.5"
+}
+```
 
-```javascript
+Restart your app.
+Of course you can use `meteorhacks:npm` as always.
+PostCSS will know which Npm packages are PostCSS plugins and which are not.
+
+#### 2. If you need to pass some options to your PostCSS plugins create options file `sgrid.json` in the root app folder.
+
+Example of options file (passing some options to the autoprefixer plugin):
+
+**sgrid.json (PostCSS plugins options - this file is optional):**
+```
 {
     "postcss": {
-        "plugins": [
-            {
-                "name": "rucksack-css",
-                "options": {},
-                "dirName": "postcss-plugins"
-            }
-        ]
+        "pluginsOptions": {
+            "autoprefixer": {"browsers": ["last 2 versions"]}
+        }
     }
 }
 ```
 
-* **name** - PostCSS plugin name needed in PostCSS plugins API inside the build plugin (this is dynamic so we need to pass it somewhere)
-* **options** - PostCSS plugins has options which you can pass. Like for example Rucksack
-Npm.require("rucksack-css")({responsiveType: false}); So here in the config options object you need to pass 'responsiveType: false'.
-* **dirName** - we need to point where are node_modules folders, we need to pass local package folder name here. (In this example it is 'postcss-plugins')
+#### 3. Now you can use all the features which are provided by Rucksack plugin.
 
-Then restart your Meteor App.
-
-##### 3. Now you can use all the features which are provided by Rucksack plugin.
-So in your .styl file you could write something like:
+So in our example in .styl file you could write something like:
 
 Stylus:
 ```stylus
@@ -182,7 +176,15 @@ Compiled to (with Rucksack):
     color #fff
 ```
 
-Unfortunately for now in Meteor there isn't simpler way to include custom PostCSS plugins from outside.
+**Of course you can add more PostCSS plugins. There is no need to use PostCSS plugins which are responsible for imports, variables etc because it is all in Stylus, but sometimes there are great PostCSS plugins out there.**
+
+Unfortunately for now in Meteor there isn't simpler way to include custom PostCSS plugins from outside. You need to use `meteorhacks:npm` package which is great.
+
+If you want to change something in `sgrid.json` config file later, you should restart your app and also change any .style file to rerun build plugin.
+
+**Standalone PostCSS package for Meteor:**
+
+- [PostCSS for Meteor](https://atmospherejs.com/juliancwirko/postcss)
 
 ### Grid website and docs
 
@@ -193,6 +195,9 @@ Unfortunately for now in Meteor there isn't simpler way to include custom PostCS
 MIT
 
 ### Changelog
+
+#### v2.2.0
+- If you want to use PostCSS we now use `meteorhacks:npm` container for it
 
 #### v2.1.0
 - You can use PostCSS plugins with Stylus
