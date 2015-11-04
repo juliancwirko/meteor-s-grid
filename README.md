@@ -190,6 +190,10 @@ If you want to change something in `sgrid.json` config file later, you should re
 
 - [stylusgrid.com](http://stylusgrid.com)
 
+### Also check out:
+
+- [PostCSS for Meteor](https://atmospherejs.com/juliancwirko/postcss)
+
 ### License
 
 MIT
