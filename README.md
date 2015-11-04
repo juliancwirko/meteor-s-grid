@@ -182,10 +182,6 @@ Unfortunately for now in Meteor there isn't simpler way to include custom PostCS
 
 If you want to change something in `sgrid.json` config file later, you should restart your app and also change any .style file to rerun build plugin.
 
-**Standalone PostCSS package for Meteor:**
-
-- [PostCSS for Meteor](https://atmospherejs.com/juliancwirko/postcss)
-
 ### Grid website and docs
 
 - [stylusgrid.com](http://stylusgrid.com)
