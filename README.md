@@ -111,9 +111,9 @@ breakpoints = {                // media queries breakpoints
 
 From version 2.1.0 you can use PostCSS and PostCSS plugins with this package. It is possible because of Stylus plugin which is called [poststylus](https://github.com/seaneking/poststylus).
 
-From version 2.2.0 to use PostCSS with this package you will need to install [meteorhacks:npm](https://github.com/meteorhacks/npm) package and you should do it by hand because not all users want to use PostCSS so it will not be added automatically. Read more below.
+From version 2.2.0 to use PostCSS with this package you will need to install [meteorhacks:npm](https://github.com/meteorhacks/npm) package and you should do it by hand because not all users want to use PostCSS additional plugins so it will not be added automatically. Read more below.
 
-(You don't have to add `autoprefixer`. It is added by default because s-grid needs it. You can configure it. Read more about it below.)
+**You don't have to add `autoprefixer`. It is added by default because s-grid needs it. You can configure it. Read more about it below.**
 
 **To use PostCSS plugins all you need to do is:**
 
