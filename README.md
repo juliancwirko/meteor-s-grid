@@ -196,6 +196,9 @@ MIT
 
 ### Changelog
 
+#### v2.2.1
+- Autoprefixer update
+
 #### v2.2.0
 - If you want to use PostCSS we now use `meteorhacks:npm` container for it
 
