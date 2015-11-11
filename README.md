@@ -2,7 +2,8 @@
 
 - [Meteor sGrid Website](http://s-grid.meteor.com/)
 - [More complex docs and grid examples - stylusgrid.com](http://stylusgrid.com/)
-- [Blog post about it](http://julian.io/s-grid-working-with-flexible-box-layouts/)
+- Blog post: [sGrid - Working with Flexible Box layouts](http://julian.io/s-grid-working-with-flexible-box-layouts/)
+- Blog post: [My workflow with the Stylus and Flexbox grid system](https://medium.com/@juliancwirko/my-workflow-with-the-stylus-and-flexbox-grid-system-5f4f50ac3f33)
 
 **It is now ready for Meteor 1.2** (use version 1.1.1 for older Meteor projects)
 
@@ -195,6 +196,9 @@ If you want to change something in `sgrid.json` config file later, you should re
 MIT
 
 ### Changelog
+
+#### v2.2.2
+- sGrid update
 
 #### v2.2.1
 - Autoprefixer update
