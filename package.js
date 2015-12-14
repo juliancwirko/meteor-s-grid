@@ -1,6 +1,6 @@
 Package.describe({
     summary: 'Stylus Flexbox grid system for Meteor with PostCSS and included Autoprefixer',
-    version: '2.2.2',
+    version: '2.2.3',
     name: 'juliancwirko:s-grid',
     git: 'https://github.com/juliancwirko/meteor-s-grid.git'
 });
@@ -12,10 +12,10 @@ Package._transitional_registerBuildPlugin({
         'plugin/compile-stylus.js'
     ],
     npmDependencies: {
-        'app-module-path': '1.0.4',
-        'stylus': '0.52.4',
-        'poststylus': '0.2.1',
-        'autoprefixer': '6.1.0',
+        'app-module-path': '1.0.5',
+        'stylus': '0.53.0',
+        'poststylus': '0.2.2',
+        'autoprefixer': '6.1.2',
         'rupture': '0.6.1',
         's-grid': '1.1.2'
     }

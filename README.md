@@ -198,6 +198,10 @@ MIT
 
 ### Changelog
 
+#### v2.2.3
+- Stylus update
+- Autoprefier update
+
 #### v2.2.2
 - sGrid update
 
