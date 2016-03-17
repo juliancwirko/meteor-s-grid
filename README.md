@@ -1,7 +1,6 @@
 ## Stylus Flexbox grid system for Meteor
 
-- [Meteor sGrid Website](http://s-grid.meteor.com/)
-- [More complex docs and grid examples - stylusgrid.com](http://stylusgrid.com/)
+- [Complex docs and grid examples - stylusgrid.com](http://stylusgrid.com/)
 - Blog post: [sGrid - Working with Flexible Box layouts](http://julian.io/s-grid-working-with-flexible-box-layouts/)
 - Blog post: [My workflow with the Stylus and Flexbox grid system](https://medium.com/@juliancwirko/my-workflow-with-the-stylus-and-flexbox-grid-system-5f4f50ac3f33)
 - Article on Sitepoint.com: [Introducing sGrid: A Stylus-based Flexbox Grid System](http://www.sitepoint.com/introducing-sgrid-a-stylus-based-flexbox-grid-system/)
@@ -110,6 +109,7 @@ breakpoints = {                // media queries breakpoints
 ```
 
 ### Use PostCSS plugins with Stylus
+(this part is totally optional... will change after Meteor 1.3 release)
 
 From version 2.1.0 you can use PostCSS and PostCSS plugins with this package. It is possible because of Stylus plugin which is called [poststylus](https://github.com/seaneking/poststylus).
 
